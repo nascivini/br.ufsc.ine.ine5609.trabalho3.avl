@@ -1,4 +1,3 @@
-
 package br.ufsc.ine.ine5609.trabalho3.avl;
 
 /**
@@ -29,8 +28,24 @@ public class AVLTree {
         return false;
     }
     
-    public void removeFromTree(int element){
+    public void rotateLeft(){
     
+    }
+    
+    public void rotateRight(){
+    
+    }
+    
+    public void rotateDoubleRight(){
+    
+    }
+    
+    public void rotateDoubleLeft(){
+    
+    }
+    
+    public void removeFromTree(int element){
+        
     }
     
     public void makeBalance(){

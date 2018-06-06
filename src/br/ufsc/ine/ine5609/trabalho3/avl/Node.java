@@ -42,5 +42,9 @@ public class Node {
     public void setRightChild(Node rightChild) {
         this.rightChild = rightChild;
     }
+    
+    public void setBalance(int newBalance){
+        this.balance = newBalance;
+    }
    
 }

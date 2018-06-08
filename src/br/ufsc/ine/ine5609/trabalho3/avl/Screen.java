@@ -34,7 +34,7 @@ public class Screen extends JFrame {
     }
     
     private void createComponents(){
-        this.descricaoTela = new JLabel("Insira os dados na caixa de texto. Para manipular a árvore, use os botões na lateral. :)");
+        this.descricaoTela = new JLabel("Insira os dados na caixa de texto para excl. ou ins.");
         this.inserir = new JButton("Inserir Dados");
         this.listar = new JButton("Listar");
         this.limpar = new JButton("Limpar");
@@ -59,48 +59,49 @@ public class Screen extends JFrame {
         this.sair.addActionListener(gerenciador);
         this.limpar.addActionListener(gerenciador);
         this.excluir.addActionListener(gerenciador);
-       
+        
+        c.gridx = 1;
+        c.gridy = 0;
         c.anchor = GridBagConstraints.NORTH;
         c.insets = new Insets(0,0,90,0);
         container.add(this.descricaoTela, c);
         
-        c.gridx = 0;
-        c.gridy = 0;
+        c.gridx = 2;
+        c.gridy = 1;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0,10,0,0);
         inserir.setPreferredSize(dimensaoBotoes);
         container.add(this.inserir, c);
         
-        c.gridx = 0;
-        c.gridy = 1;
-        c.anchor = GridBagConstraints.WEST;     
-        c.insets = new Insets(10,10,10,10);
-        listar.setPreferredSize(dimensaoBotoes);
-        container.add(this.listar, c);
-        
-        
-        c.gridx = 0;
+        c.gridx = 2;
         c.gridy = 2;
-        c.anchor = GridBagConstraints.WEST;  
-        limpar.setPreferredSize(dimensaoBotoes);
-        c.insets = new Insets(10,10,10,10);
-        container.add(this.limpar, c);
-        
-        c.gridx = 0;
-        c.gridy = 3;
         c.anchor = GridBagConstraints.WEST;  
         excluir.setPreferredSize(dimensaoBotoes);
         c.insets = new Insets(10,10,10,10);
         container.add(this.excluir, c);
         
         c.gridx = 0;
-        c.gridy = 4;
-        c.anchor = GridBagConstraints.WEST;  
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.CENTER;     
+        c.insets = new Insets(10,10,10,10);
+        listar.setPreferredSize(dimensaoBotoes);
+        container.add(this.listar, c);
+        
+        c.gridx = 0;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.CENTER;  
+        limpar.setPreferredSize(dimensaoBotoes);
+        c.insets = new Insets(10,10,10,10);
+        container.add(this.limpar, c);
+        
+        c.gridx = 0;
+        c.gridy = 3;
+        c.anchor = GridBagConstraints.CENTER;  
         sair.setPreferredSize(dimensaoBotoes);
         c.insets = new Insets(10,10,10,10);
         container.add(this.sair, c);
         
-        c.gridx = 1;
+        c.gridx = 2;
         c.gridy = 0;
         c.anchor = GridBagConstraints.EAST;
         dadosInserir.setPreferredSize(dimensaoTextos);
@@ -114,7 +115,7 @@ public class Screen extends JFrame {
         arvoreListada.setPreferredSize(dimensaoLabel);
         container.add(this.arvoreListada, c);
         
-        this.setSize(900, 500);
+        this.setSize(800, 400);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
@@ -143,7 +144,7 @@ public class Screen extends JFrame {
             if(e.getSource() == inserir){
                 validaNumero(dadosInserir);
                 controlador.getArvore().inserir(Integer.parseInt((dadosInserir.getText())));
-                JOptionPane.showMessageDialog(null, "Elemento" + dadosInserir.getText() + " inserido!","Informação", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Elemento " + dadosInserir.getText() + " inserido!","Informação", JOptionPane.INFORMATION_MESSAGE);
                 dadosInserir.setText("");
             }
             else if(e.getSource() == listar){
@@ -157,7 +158,7 @@ public class Screen extends JFrame {
             else if(e.getSource() == excluir){
                 validaNumero(dadosInserir);
                 controlador.getArvore().remover(Integer.parseInt((dadosInserir.getText())));
-                JOptionPane.showMessageDialog(null, "Elemento" + dadosInserir.getText() + "excluído!","Informação", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Elemento " + dadosInserir.getText() + " excluído!","Informação", JOptionPane.INFORMATION_MESSAGE);
                 dadosInserir.setText("");
             }
             else if(e.getSource() == limpar){

@@ -3,281 +3,332 @@ package br.ufsc.ine.ine5609.trabalho3.avl;
 import java.util.ArrayList;
 
 /**
- *
- * @author vinicius.nascimento
+ * Universidade Federal de Santa Catarina - UFSC
+ * Departamento de Informática e Estatística - INE
+ * INE5609 - Estruturas de Dados 2018/1
+ * @author vinicius.nascimento 17103176
+ * @author marco.geremias 17103974
  */
 public class AVLTree {
 
-    private No raiz;
-
+    private Nodo raizPrincipal;
+    
+    /**
+     * Construtor. Instancia uma árvore AVL padrão sem dados.
+     */
     public AVLTree() {
-        this.raiz = null;
+        this.raizPrincipal = null;
     }
-
-    public No getMainRoot() {
-        return raiz;
+    
+     /**
+     * Realiza uma caminhada in-order na árvore e retorna um ArrayList com todos os nós da árvore ordenados.
+     * Ordena os nodos recursivamente com o apoio do método 'filho' inorder(com parâmetros)
+     * @return ArrayList<Nodo> com todos os nós da árvore ordenados.
+     * Utilizado especificamente na listagem ou na 'impressão' da árvore.
+     */
+    final protected ArrayList<Nodo> inorder() {
+        ArrayList<Nodo> ret = new ArrayList<>();
+        inorder(raizPrincipal, ret);
+        return ret;
     }
-
-    public void setMainRoot(No mainRoot) {
-        this.raiz = mainRoot;
+    
+    /**
+     * Método de apoio para a recursividade da caminhada em ordem.
+     * @param nodo Nodo raiz atual.
+     * @param lista Lista atual. (será atualizada na recursão)
+     */
+    final protected void inorder(Nodo nodo, ArrayList<Nodo> lista) {
+        if (nodo == null) {
+            return;
+        }
+        inorder(nodo.getFilhoEsquerda(), lista);
+        lista.add(nodo);
+        inorder(nodo.getFilhoDireita(), lista);
     }
-
-    public void inserir(int k) {
-        No n = new No(k);
-        inserirAVL(this.raiz, n);
+    
+    /**
+     * Método padrão para inserção de dados na árvore. Utiliza os métodos subsequentes da classe para inserir corretamente seguindo os padrões AVL.
+     * @param dado Recebe como parâmetro um número inteiro a ser inserido.
+     */
+    public void inserir(int dado) {
+        Nodo n = new Nodo(dado);
+        inserirAVL(this.raizPrincipal, n);
     }
+    
+    /**
+     * Método usado para realizar a inserção na lista de forma balanceada.
+     * Recebe como parâmetro o nodo a ser inserido e outro nodo a ser comparado (recursivamente)
+     * Utiliza as especializações de métodos da classe para verificar o balanceamento e rotacionar os dados na árvore se necessário.
+     * @param aSerComparado Nodo a comparar na inserção.
+     * @param aInserir Nodo a ser inserido na árvore.
+     */
+    private void inserirAVL(Nodo aSerComparado, Nodo aInserir) {
 
-    public void inserirAVL(No aComparar, No aInserir) {
+        if (aSerComparado == null) {
+            this.raizPrincipal = aInserir;
 
-        if (aComparar == null) {
-            this.raiz = aInserir;
-
-        } else {
-
-            if (aInserir.getChave() < aComparar.getChave()) {
-
-                if (aComparar.getEsquerda() == null) {
-                    aComparar.setEsquerda(aInserir);
-                    aInserir.setPai(aComparar);
-                    verificarBalanceamento(aComparar);
-
-                } else {
-                    inserirAVL(aComparar.getEsquerda(), aInserir);
+        } 
+        else {
+            if (aInserir.getDado() < aSerComparado.getDado()) {
+                if (aSerComparado.getFilhoEsquerda() == null) {
+                    aSerComparado.setFilhoEsquerda(aInserir);
+                    aInserir.setPai(aSerComparado);
+                    verificarBalanceamento(aSerComparado);
+                } 
+                else {
+                    inserirAVL(aSerComparado.getFilhoEsquerda(), aInserir);
                 }
-
-            } else if (aInserir.getChave() > aComparar.getChave()) {
-
-                if (aComparar.getDireita() == null) {
-                    aComparar.setDireita(aInserir);
-                    aInserir.setPai(aComparar);
-                    verificarBalanceamento(aComparar);
-
+            } 
+            else if (aInserir.getDado() > aSerComparado.getDado()) {
+                if (aSerComparado.getFilhoDireita() == null) {
+                    aSerComparado.setDireita(aInserir);
+                    aInserir.setPai(aSerComparado);
+                    verificarBalanceamento(aSerComparado);
                 } else {
-                    inserirAVL(aComparar.getDireita(), aInserir);
+                    inserirAVL(aSerComparado.getFilhoDireita(), aInserir);
                 }
-
-            } else {
+            } 
+            else {
                 // O nó já existe
             }
         }
     }
-
-    public void verificarBalanceamento(No atual) {
+    
+    /**
+     * Método utilizado APENAS por meio do método inserirAVL.
+     * Verifica o balanceamento do nodo passado como parâmetro.
+     * @param atual Nodo a ter o balanceamento verificado.
+     */
+    private void verificarBalanceamento(Nodo atual) {
         setBalanceamento(atual);
-        int balanceamento = atual.getBalanceamento();
-
+        int balanceamento = atual.getNumBalanceamento();
         if (balanceamento == -2) {
-
-            if (altura(atual.getEsquerda().getEsquerda()) >= altura(atual.getEsquerda().getDireita())) {
+            if (calculaAltura(atual.getFilhoEsquerda().getFilhoEsquerda()) >= calculaAltura(atual.getFilhoEsquerda().getFilhoDireita())) {
                 atual = rotacaoDireita(atual);
-
-            } else {
+            } 
+            else {
                 atual = duplaRotacaoEsquerdaDireita(atual);
             }
-
-        } else if (balanceamento == 2) {
-
-            if (altura(atual.getDireita().getDireita()) >= altura(atual.getDireita().getEsquerda())) {
+        } 
+        else if (balanceamento == 2) {
+            if (calculaAltura(atual.getFilhoDireita().getFilhoDireita()) >= calculaAltura(atual.getFilhoDireita().getFilhoEsquerda())) {
                 atual = rotacaoEsquerda(atual);
-
-            } else {
+            } 
+            else {
                 atual = duplaRotacaoDireitaEsquerda(atual);
             }
         }
-
-        if (atual.getPai() != null) {
-            verificarBalanceamento(atual.getPai());
-        } else {
-            this.raiz = atual;
+        if (atual.getNodoPai() != null) {
+            verificarBalanceamento(atual.getNodoPai());
+        } 
+        else {
+            this.raizPrincipal = atual;
         }
     }
-
-    public void remover(int k) {
-        removerAVL(this.raiz, k);
+    
+    /**
+     * Seguindo a mesma lógica da inserção, é o método que starta a exclusão do elemento na árvore.
+     * @param dado Valor a ser removido. 
+     */
+    public void remover(int dado) {
+        removerAVL(this.raizPrincipal, dado);
     }
 
-    public void removerAVL(No atual, int k) {
+    /**
+     * Remove o elemento passado como parâmetro com base na raiz passada inicialmente também como parâmetro.
+     * Realiza a exclusão de forma recursiva.
+     * Ao encontrar o valor a ser excluído, utiliza o método removerNodoEncontrado para excluí-lo efetivamente e rebalancear a árvore se necessário.
+     * @param atual Nodo atual (a raiz principal inicialmente)
+     * @param dado (valor a ser inserido)
+     */
+    private void removerAVL(Nodo atual, int dado) {
         if (atual == null) {
             return;
-
-        } else {
-
-            if (atual.getChave() > k) {
-                removerAVL(atual.getEsquerda(), k);
-
-            } else if (atual.getChave() < k) {
-                removerAVL(atual.getDireita(), k);
-
-            } else if (atual.getChave() == k) {
-                removerNoEncontrado(atual);
+        } 
+        else {
+            if (atual.getDado() > dado) {
+                removerAVL(atual.getFilhoEsquerda(), dado);
+            } 
+            else if (atual.getDado() < dado) {
+                removerAVL(atual.getFilhoDireita(), dado);
+            } 
+            else if (atual.getDado() == dado) {
+                removerNodoEncontrado(atual);
             }
         }
     }
-
-    public void removerNoEncontrado(No aRemover) {
-        No r;
-
-        if (aRemover.getEsquerda() == null || aRemover.getDireita() == null) {
-
-            if (aRemover.getPai() == null) {
-                this.raiz = null;
+    
+    /**
+     * Remove o nodo passado como parâmetro da árvore.
+     * Balanceia a árvore novamente se necessário utilizando os métodos especializados.
+     * @param aRemover Nodo a ser removido.
+     */
+    private void removerNodoEncontrado(Nodo aRemover) {
+        Nodo r;
+        if (aRemover.getFilhoEsquerda() == null || aRemover.getFilhoDireita() == null) {
+            if (aRemover.getNodoPai() == null) {
+                this.raizPrincipal = null;
                 aRemover = null;
                 return;
             }
             r = aRemover;
-
-        } else {
+        } 
+        else {
             r = sucessor(aRemover);
-            aRemover.setChave(r.getChave());
+            aRemover.setDado(r.getDado());
         }
-
-        No p;
-        if (r.getEsquerda() != null) {
-            p = r.getEsquerda();
-        } else {
-            p = r.getDireita();
+        Nodo p;
+        if (r.getFilhoEsquerda() != null) {
+            p = r.getFilhoEsquerda();
+        } 
+        else {
+            p = r.getFilhoDireita();
         }
-
         if (p != null) {
-            p.setPai(r.getPai());
+            p.setPai(r.getNodoPai());
         }
-
-        if (r.getPai() == null) {
-            this.raiz = p;
-        } else {
-            if (r == r.getPai().getEsquerda()) {
-                r.getPai().setEsquerda(p);
+        if (r.getNodoPai() == null) {
+            this.raizPrincipal = p;
+        } 
+        else {
+            if (r == r.getNodoPai().getFilhoEsquerda()) {
+                r.getNodoPai().setFilhoEsquerda(p);
             } else {
-                r.getPai().setDireita(p);
+                r.getNodoPai().setDireita(p);
             }
-            verificarBalanceamento(r.getPai());
+            verificarBalanceamento(r.getNodoPai());
         }
         r = null;
     }
 
-    public No rotacaoEsquerda(No inicial) {
-
-        No direita = inicial.getDireita();
-        direita.setPai(inicial.getPai());
-
-        inicial.setDireita(direita.getEsquerda());
-
-        if (inicial.getDireita() != null) {
-            inicial.getDireita().setPai(inicial);
+    /**
+     * Rotaciona o nodo à esquerda, manipulando os apontamentos.
+     * @param nodo Nodo base a ser rotacionado.
+     * @return Retorna o nodo 'corrigido'.
+     */
+    private Nodo rotacaoEsquerda(Nodo nodo) {
+        Nodo direita = nodo.getFilhoDireita();
+        direita.setPai(nodo.getNodoPai());
+        nodo.setDireita(direita.getFilhoEsquerda());
+        if (nodo.getFilhoDireita() != null) {
+            nodo.getFilhoDireita().setPai(nodo);
         }
-
-        direita.setEsquerda(inicial);
-        inicial.setPai(direita);
-
-        if (direita.getPai() != null) {
-
-            if (direita.getPai().getDireita() == inicial) {
-                direita.getPai().setDireita(direita);
-
-            } else if (direita.getPai().getEsquerda() == inicial) {
-                direita.getPai().setEsquerda(direita);
+        direita.setFilhoEsquerda(nodo);
+        nodo.setPai(direita);
+        if (direita.getNodoPai() != null) {
+            if (direita.getNodoPai().getFilhoDireita() == nodo) {
+                direita.getNodoPai().setDireita(direita);
+            } else if (direita.getNodoPai().getFilhoEsquerda() == nodo) {
+                direita.getNodoPai().setFilhoEsquerda(direita);
             }
         }
-
-        setBalanceamento(inicial);
+        setBalanceamento(nodo);
         setBalanceamento(direita);
-
         return direita;
     }
 
-    public No rotacaoDireita(No inicial) {
-
-        No esquerda = inicial.getEsquerda();
-        esquerda.setPai(inicial.getPai());
-
-        inicial.setEsquerda(esquerda.getDireita());
-
-        if (inicial.getEsquerda() != null) {
-            inicial.getEsquerda().setPai(inicial);
+    
+    /**
+     * Rotaciona o nodo à direita, manipulando os apontamentos.
+     * @param nodo Nodo base a ser rotacionado.
+     * @return Retorna o nodo 'corrigido'.
+     */
+    private Nodo rotacaoDireita(Nodo nodo) {
+        Nodo esquerda = nodo.getFilhoEsquerda();
+        esquerda.setPai(nodo.getNodoPai());
+        nodo.setFilhoEsquerda(esquerda.getFilhoDireita());
+        if (nodo.getFilhoEsquerda() != null) {
+            nodo.getFilhoEsquerda().setPai(nodo);
         }
+        esquerda.setDireita(nodo);
+        nodo.setPai(esquerda);
+        if (esquerda.getNodoPai() != null) {
+            if (esquerda.getNodoPai().getFilhoDireita() == nodo) {
+                esquerda.getNodoPai().setDireita(esquerda);
 
-        esquerda.setDireita(inicial);
-        inicial.setPai(esquerda);
-
-        if (esquerda.getPai() != null) {
-
-            if (esquerda.getPai().getDireita() == inicial) {
-                esquerda.getPai().setDireita(esquerda);
-
-            } else if (esquerda.getPai().getEsquerda() == inicial) {
-                esquerda.getPai().setEsquerda(esquerda);
+            } 
+            else if (esquerda.getNodoPai().getFilhoEsquerda() == nodo) {
+                esquerda.getNodoPai().setFilhoEsquerda(esquerda);
             }
         }
-
-        setBalanceamento(inicial);
+        setBalanceamento(nodo);
         setBalanceamento(esquerda);
-
         return esquerda;
     }
-
-    public No duplaRotacaoEsquerdaDireita(No inicial) {
-        inicial.setEsquerda(rotacaoEsquerda(inicial.getEsquerda()));
-        return rotacaoDireita(inicial);
+    
+    /**
+     * Rotaciona o nodo duplamente. Inicialmente à esquerda, e posteriormente à direita.
+     * @param nodo Nodo a ser rotacionado.
+     * @return Nodo 'corrigido'.
+     */
+    private Nodo duplaRotacaoEsquerdaDireita(Nodo nodo) {
+        nodo.setFilhoEsquerda(rotacaoEsquerda(nodo.getFilhoEsquerda()));
+        return rotacaoDireita(nodo);
     }
 
-    public No duplaRotacaoDireitaEsquerda(No inicial) {
-        inicial.setDireita(rotacaoDireita(inicial.getDireita()));
+    
+    /**
+     * Rotaciona o nodo duplamente. Inicialmente à direita, e posteriormente à esquerda.
+     * @param nodo Nodo a ser rotacionado.
+     * @return Nodo 'corrigido'.
+     */
+    private Nodo duplaRotacaoDireitaEsquerda(Nodo inicial) {
+        inicial.setDireita(rotacaoDireita(inicial.getFilhoDireita()));
         return rotacaoEsquerda(inicial);
     }
-
-    public No sucessor(No q) {
-        if (q.getDireita() != null) {
-            No r = q.getDireita();
-            while (r.getEsquerda() != null) {
-                r = r.getEsquerda();
+    
+    /**
+     * Substitui o nodo recebido (vindo da exclusão) por seu substituto após encontrá-lo, depois também de calcular seu sucessor na iteração.
+     * @param aSerSubstituido
+     * @return Retorna o novo nodo inserido no local do nodo passado por parâmetro.
+     */
+    public Nodo sucessor(Nodo aSerSubstituido) {
+        if (aSerSubstituido.getFilhoDireita() != null) {
+            Nodo nodo1 = aSerSubstituido.getFilhoDireita();
+            while (nodo1.getFilhoEsquerda() != null) {
+                nodo1 = nodo1.getFilhoEsquerda();
             }
-            return r;
+            return nodo1;
         } else {
-            No p = q.getPai();
-            while (p != null && q == p.getDireita()) {
-                q = p;
-                p = q.getPai();
+            Nodo nodo2 = aSerSubstituido.getNodoPai();
+            while (nodo2 != null && aSerSubstituido == nodo2.getFilhoDireita()) {
+                aSerSubstituido = nodo2;
+                nodo2 = aSerSubstituido.getNodoPai();
             }
-            return p;
+            return nodo2;
         }
     }
 
-    private int altura(No atual) {
+    /**
+     * Calcula a 'calculaAltura' do nodo passado por parâmetro (calculaAltura da direita - calculaAltura da esquerda)
+     * @param atual Nodo para o cálculo.
+     * @return 'calculaAltura': (Altura da direita - Altura da esquerda)
+     */
+    private int calculaAltura(Nodo atual) {
         if (atual == null) {
             return -1;
         }
-
-        if (atual.getEsquerda() == null && atual.getDireita() == null) {
+        if (atual.getFilhoEsquerda() == null && atual.getFilhoDireita() == null) {
             return 0;
-
-        } else if (atual.getEsquerda() == null) {
-            return 1 + altura(atual.getDireita());
-
-        } else if (atual.getDireita() == null) {
-            return 1 + altura(atual.getEsquerda());
-
-        } else {
-            return 1 + Math.max(altura(atual.getEsquerda()), altura(atual.getDireita()));
+        } 
+        else if (atual.getFilhoEsquerda() == null) {
+            return 1 + calculaAltura(atual.getFilhoDireita());
+        } 
+        else if (atual.getFilhoDireita() == null) {
+            return 1 + calculaAltura(atual.getFilhoEsquerda());
+        } 
+        else {
+            return 1 + Math.max(calculaAltura(atual.getFilhoEsquerda()), calculaAltura(atual.getFilhoDireita()));
         }
     }
-
-    private void setBalanceamento(No no) {
-        no.setBalanceamento(altura(no.getDireita()) - altura(no.getEsquerda()));
+    
+    /**
+     * Atualiza o balanceamento dos nodos de acordo com o cálculo feito pelo método calculaAltura.
+     * @param no 
+     */
+    private void setBalanceamento(Nodo no) {
+        no.setNumBalanceamento(calculaAltura(no.getFilhoDireita()) - calculaAltura(no.getFilhoEsquerda()));
     }
 
-    final protected ArrayList<No> inorder() {
-        ArrayList<No> ret = new ArrayList<No>();
-        inorder(raiz, ret);
-        return ret;
-    }
-
-    final protected void inorder(No no, ArrayList<No> lista) {
-        if (no == null) {
-            return;
-        }
-        inorder(no.getEsquerda(), lista);
-        lista.add(no);
-        inorder(no.getDireita(), lista);
-    }
 }
 

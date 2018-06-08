@@ -23,7 +23,7 @@ public class AVLTree {
      /**
      * Realiza uma caminhada in-order na árvore e retorna um ArrayList com todos os nós da árvore ordenados.
      * Ordena os nodos recursivamente com o apoio do método 'filho' inorder(com parâmetros)
-     * @return ArrayList<Nodo> com todos os nós da árvore ordenados.
+     * @return ArrayList com todos os nós da árvore ordenados.
      * Utilizado especificamente na listagem ou na 'impressão' da árvore.
      */
     final protected ArrayList<Nodo> inorder() {
@@ -279,7 +279,7 @@ public class AVLTree {
     
     /**
      * Substitui o nodo recebido (vindo da exclusão) por seu substituto após encontrá-lo, depois também de calcular seu sucessor na iteração.
-     * @param aSerSubstituido
+     * @param aSerSubstituido Nodo a ser substiuído.
      * @return Retorna o novo nodo inserido no local do nodo passado por parâmetro.
      */
     public Nodo sucessor(Nodo aSerSubstituido) {

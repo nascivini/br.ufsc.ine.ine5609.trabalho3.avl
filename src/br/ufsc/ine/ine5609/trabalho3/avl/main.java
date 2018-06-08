@@ -10,7 +10,7 @@ package br.ufsc.ine.ine5609.trabalho3.avl;
 public class main {
     /**
      * Inicia a aplicação, instanciando o controlador e a tela.
-     * @param args 
+     * @param args Argumentos para startar a aplicação.
      */
     public static void main(String[] args) {
         Controlador controlador = new Controlador();

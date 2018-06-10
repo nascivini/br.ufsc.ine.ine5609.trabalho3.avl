@@ -143,8 +143,19 @@ public class Screen extends JFrame {
             arvoreListada.setText("");
             if(e.getSource() == inserir){
                 validaNumero(dadosInserir);
+                ArrayList<Nodo> array = controlador.getArvore().inorder();
                 controlador.getArvore().inserir(Integer.parseInt((dadosInserir.getText())));
-                JOptionPane.showMessageDialog(null, "Elemento " + dadosInserir.getText() + " inserido!","Informação", JOptionPane.INFORMATION_MESSAGE);
+                boolean control = false;
+                for (Nodo nodo : array) {
+                    if(nodo.getDado() == Integer.parseInt((dadosInserir.getText()))){
+                        control = true;
+                    }
+                }
+                if(!control){
+                    JOptionPane.showMessageDialog(null, "Elemento " + dadosInserir.getText() + " inserido!","Informação", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Elemento " + dadosInserir.getText() + " já existe na árvore!","Informação", JOptionPane.INFORMATION_MESSAGE);
+                }
                 dadosInserir.setText("");
             }
             else if(e.getSource() == listar){
@@ -157,8 +168,19 @@ public class Screen extends JFrame {
             }
             else if(e.getSource() == excluir){
                 validaNumero(dadosInserir);
+                ArrayList<Nodo> array = controlador.getArvore().inorder();
                 controlador.getArvore().remover(Integer.parseInt((dadosInserir.getText())));
-                JOptionPane.showMessageDialog(null, "Elemento " + dadosInserir.getText() + " excluído!","Informação", JOptionPane.INFORMATION_MESSAGE);
+                boolean control = false;
+                for (Nodo nodo : array) {
+                    if(nodo.getDado() == Integer.parseInt((dadosInserir.getText()))){
+                        control = true;
+                    }
+                }
+                if(control){
+                    JOptionPane.showMessageDialog(null, "Elemento " + dadosInserir.getText() + " excluído!","Informação", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Elemento " + dadosInserir.getText() + " não existe na árvore!","Informação", JOptionPane.INFORMATION_MESSAGE);
+                }
                 dadosInserir.setText("");
             }
             else if(e.getSource() == limpar){

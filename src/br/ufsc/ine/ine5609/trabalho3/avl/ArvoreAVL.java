@@ -9,14 +9,14 @@ import java.util.ArrayList;
  * @author vinicius.nascimento 17103176
  * @author marco.geremias 17103974
  */
-public class AVLTree {
+public class ArvoreAVL {
 
     private Nodo raizPrincipal;
     
     /**
      * Construtor. Instancia uma árvore AVL padrão sem dados.
      */
-    public AVLTree() {
+    public ArvoreAVL() {
         this.raizPrincipal = null;
     }
     

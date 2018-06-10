@@ -8,17 +8,17 @@ package br.ufsc.ine.ine5609.trabalho3.avl;
  * @author marco.geremias 17103974
  */
 public class Controlador {
-    AVLTree arvore;
+    ArvoreAVL arvore;
     
     Controlador(){
-        this.arvore = new AVLTree();
+        this.arvore = new ArvoreAVL();
     }
 
-    public AVLTree getArvore() {
+    public ArvoreAVL getArvore() {
         return arvore;
     }
 
-    public void setArvore(AVLTree arvore) {
+    public void setArvore(ArvoreAVL arvore) {
         this.arvore = arvore;
     }
     
